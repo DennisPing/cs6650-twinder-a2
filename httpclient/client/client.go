@@ -5,14 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"math"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/DennisPing/cs6650-twinder-a2/datagen"
+	"github.com/DennisPing/cs6650-twinder-a2/httpclient/datagen"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 )
@@ -45,14 +44,14 @@ func (client *ApiClient) SwipeLeftOrRight(ctx context.Context, direction string)
 
 	req, err := client.createRequest(ctx, http.MethodPost, swipeEndpoint, swipeRequest)
 	if err != nil {
-		logger.Logger.Error().Msg(err.Error())
+		logger.Error().Msg(err.Error())
 		return
 	}
 
 	resp, err := client.sendRequest(req, 5)
 	if err != nil {
 		client.ErrorCount += 1
-		log.Logger.Error().Msgf("max retries hit: %v", err)
+		logger.Error().Msgf("max retries hit: %v", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -60,10 +59,10 @@ func (client *ApiClient) SwipeLeftOrRight(ctx context.Context, direction string)
 	// StatusCode should be 200 or 201, else log warn
 	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusCreated {
 		client.SuccessCount += 1
-		log.Logger.Debug().Msg(resp.Status)
+		logger.Debug().Msg(resp.Status)
 	} else {
 		client.ErrorCount += 1
-		log.Logger.Warn().Msg(resp.Status)
+		logger.Warn().Msg(resp.Status)
 	}
 }
 

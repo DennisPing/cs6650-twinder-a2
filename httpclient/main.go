@@ -3,14 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"sync"
 	"time"
 
-	"github.com/DennisPing/cs6650-twinder-a2/client"
-	"github.com/DennisPing/cs6650-twinder-a2/datagen"
+	"github.com/DennisPing/cs6650-twinder-a2/httpclient/client"
+	"github.com/DennisPing/cs6650-twinder-a2/httpclient/datagen"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/montanaflynn/stats"
 )
@@ -23,7 +22,7 @@ const (
 func main() {
 	serverURL := os.Getenv("SERVER_URL")
 	if serverURL == "" {
-		logger.Logger.Fatal().Msg("SERVER_URL env variable not set")
+		logger.Fatal().Msg("SERVER_URL env variable not set")
 	}
 
 	port := os.Getenv("PORT") // Set the PORT to 8081 for local testing
@@ -37,7 +36,7 @@ func main() {
 			w.WriteHeader(http.StatusOK)
 		})
 		addr := fmt.Sprintf(":%s", port)
-		logger.Logger.Fatal().Msg(http.ListenAndServe(addr, nil).Error())
+		logger.Fatal().Msg(http.ListenAndServe(addr, nil).Error())
 	}()
 
 	ctx := context.Background()
@@ -65,8 +64,8 @@ func main() {
 		workerPool[i] = client.NewApiClient(sharedTransport, serverURL)
 	}
 
-	log.Logger.Info().Msgf("Using %d goroutines", maxWorkers)
-	log.Logger.Info().Msgf("Starting %d requests...", numRequests)
+	logger.Info().Msgf("Using %d goroutines", maxWorkers)
+	logger.Info().Msgf("Starting %d requests...", numRequests)
 	startTime := time.Now()
 
 	// Activate workers
@@ -101,10 +100,10 @@ func main() {
 	}
 	throughput := float64(successCount) / duration.Seconds()
 
-	log.Logger.Info().Msgf("Success count: %d", successCount)
-	log.Logger.Info().Msgf("Error count: %d", errorCount)
-	log.Logger.Info().Msgf("Total run time: %v", duration)
-	log.Logger.Info().Msgf("Throughput: %.2f req/sec", throughput)
+	logger.Info().Msgf("Success count: %d", successCount)
+	logger.Info().Msgf("Error count: %d", errorCount)
+	logger.Info().Msgf("Total run time: %v", duration)
+	logger.Info().Msgf("Throughput: %.2f req/sec", throughput)
 
 	allResponseTimes := make([]float64, 0, numRequests)
 	for _, slice := range responseTimes { // Convert all time.Duration to float64
@@ -119,9 +118,9 @@ func main() {
 	min, _ := stats.Min(allResponseTimes)
 	max, _ := stats.Max(allResponseTimes)
 
-	log.Logger.Info().Msgf("Mean response time: %.2f ms", mean)
-	log.Logger.Info().Msgf("Median response time: %.2f ms", median)
-	log.Logger.Info().Msgf("P99 response time: %.2f ms", p99)
-	log.Logger.Info().Msgf("Min response time: %.2f ms", min)
-	log.Logger.Info().Msgf("Max response time: %.2f ms", max)
+	logger.Info().Msgf("Mean response time: %.2f ms", mean)
+	logger.Info().Msgf("Median response time: %.2f ms", median)
+	logger.Info().Msgf("P99 response time: %.2f ms", p99)
+	logger.Info().Msgf("Min response time: %.2f ms", min)
+	logger.Info().Msgf("Max response time: %.2f ms", max)
 }
