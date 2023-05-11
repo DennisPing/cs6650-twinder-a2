@@ -9,16 +9,14 @@ import (
 )
 
 func NewConnection() (*rabbitmq.Conn, error) {
-	username := os.Getenv("RABBITMQ_USERNAME")
-	password := os.Getenv("RABBITMQ_PASSWORD")
 	host := os.Getenv("RABBITMQ_HOST")
 
-	if username == "" || password == "" || host == "" {
-		return nil, errors.New("you forgot to set the RABBITMQ env variables")
+	if host == "" {
+		return nil, errors.New("you forgot to set the RABBITMQ_HOST environment variable")
 	}
 
 	conn, err := rabbitmq.NewConn(
-		fmt.Sprintf("amqp://%s:%s@%s:5672", username, password, host),
+		fmt.Sprintf("amqp://%s:%s@%s:5672", "guest", "guest", host),
 		rabbitmq.WithConnectionOptionsLogging,
 	)
 	if err != nil {
