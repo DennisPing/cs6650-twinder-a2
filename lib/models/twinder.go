@@ -1,5 +1,13 @@
 package models
 
+// Client side swipe
+type SwipeRequest struct {
+	Swiper  string `json:"swiper"`
+	Swipee  string `json:"swipee"`
+	Comment string `json:"comment"`
+}
+
+// Server side swipe with the direction payload
 type SwipePayload struct {
 	Swiper    string `json:"swiper"`
 	Swipee    string `json:"swipee"`
