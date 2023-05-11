@@ -1,7 +1,5 @@
 # Twinder Assignment 2
 
-Dennis Ping
-
 ## Key Takeaways
 
 - Self managing VM instances is painful
