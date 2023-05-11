@@ -53,7 +53,8 @@ func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitm
 		rabbitmq.WithConsumerOptionsRoutingKey(""), // Bind this default queue to default routing key
 		rabbitmq.WithConsumerOptionsExchangeName("swipes"),
 		rabbitmq.WithConsumerOptionsExchangeKind("fanout"),
-		rabbitmq.WithConsumerOptionsConcurrency(10),
+		rabbitmq.WithConsumerOptionsQOSPrefetch(10),
+		rabbitmq.WithConsumerOptionsConcurrency(100),
 		rabbitmq.WithConsumerOptionsQueueAutoDelete, // Auto delete the queue upon disconnect
 	)
 }
