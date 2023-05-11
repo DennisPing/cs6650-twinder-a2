@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/logger"
+	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/rmq"
 	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/server"
 	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/store"

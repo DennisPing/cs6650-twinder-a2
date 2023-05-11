@@ -5,24 +5,22 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/logger"
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/models"
+	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
+	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/store"
 	"github.com/wagslane/go-rabbitmq"
 )
 
 func NewRmqConn() (*rabbitmq.Conn, error) {
-	username := os.Getenv("RABBITMQ_USERNAME")
-	password := os.Getenv("RABBITMQ_PASSWORD")
 	host := os.Getenv("RABBITMQ_HOST")
 
-	if username == "" || password == "" || host == "" {
-		logger.Fatal().Msg("you forgot to set the RABBITMQ env variables")
+	if host == "" {
+		logger.Fatal().Msg("you forgot to set the RABBITMQ_HOST environment variable")
 	}
 
 	// Create a new connection to rabbitmq
 	return rabbitmq.NewConn(
-		fmt.Sprintf("amqp://%s:%s@%s:5672", username, password, host),
+		fmt.Sprintf("amqp://%s:%s@%s:5672", "guest", "guest", host),
 		rabbitmq.WithConnectionOptionsLogging,
 	)
 }
@@ -53,7 +51,7 @@ func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitm
 		rabbitmq.WithConsumerOptionsRoutingKey(""), // Bind this default queue to default routing key
 		rabbitmq.WithConsumerOptionsExchangeName("swipes"),
 		rabbitmq.WithConsumerOptionsExchangeKind("fanout"),
-		rabbitmq.WithConsumerOptionsQOSPrefetch(10),
+		rabbitmq.WithConsumerOptionsQOSPrefetch(100),
 		rabbitmq.WithConsumerOptionsConcurrency(100),
 		rabbitmq.WithConsumerOptionsQueueAutoDelete, // Auto delete the queue upon disconnect
 	)
