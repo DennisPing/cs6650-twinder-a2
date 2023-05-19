@@ -4,5 +4,5 @@ use (
 	./httpclient
 	./httpserver
 	./lib
-	./rmqconsumer
+	./consumer
 )
