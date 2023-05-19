@@ -1,11 +1,21 @@
-# RabbitMQ Service
+# RabbitMQ Host
 
-The RabbitMQ service that hosts the message queues
+The RabbitMQ host that receives and sends messages
 
+### Setup dependencies
+```bash
+sudo yum update -y
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker ec2-user
+# Log out and log back in here to ensure this takes effect
+sudo systemctl enable docker
+sudo systemctl start docker
+```
 
 ## How to Deploy on Arm64 Instance
-```
-docker pull arm64v8/rabbitmq
+```bash
+docker pull arm64v8/rabbitmq:3-management
 
 docker run -d --hostname rabbitmq-1 --name rabbitmq-1 -p 5672:5672 -p 15672:15672 arm64v8/rabbitmq:3-management
 ```

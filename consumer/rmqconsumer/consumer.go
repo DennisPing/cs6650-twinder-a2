@@ -46,6 +46,7 @@ func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitm
 		"",
 		rabbitmq.WithConsumerOptionsLogging,
 		rabbitmq.WithConsumerOptionsRoutingKey(""), // Bind this default queue to default routing key
+		rabbitmq.WithConsumerOptionsExchangeDeclare,
 		rabbitmq.WithConsumerOptionsExchangeName("swipes"),
 		rabbitmq.WithConsumerOptionsExchangeKind("fanout"),
 		rabbitmq.WithConsumerOptionsQOSPrefetch(120),
