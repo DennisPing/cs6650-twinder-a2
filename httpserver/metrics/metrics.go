@@ -27,7 +27,7 @@ func NewMetrics() (*Metrics, error) {
 	ingestUrl := "https://api.axiom.co/v1/datasets/%s/ingest"
 
 	if datasetName == "" || apiToken == "" {
-		return nil, errors.New("you forgot to set the RABBITMQ env variables")
+		return nil, errors.New("you forgot to set the AXIOM env variables")
 	}
 	return &Metrics{
 		datasetName: datasetName,

@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	maxWorkers  = 100
-	numRequests = 500_000
+	maxWorkers  = 50
+	numRequests = 100_000
 )
 
 func main() {

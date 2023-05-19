@@ -2,25 +2,25 @@
 
 ## Build and Push up to Docker Hub
 ```
-docker build -t mushufeels/rmqconsumer .
-docker push mushufeels/rmqconsumer:latest
+docker build -t mushufeels/consumer .
+docker push mushufeels/consumer:latest
 ```
 
 ## Pull down from Docker Hub into VM
 ```
-docker pull mushufeels/rmqconsumer:latest
+docker pull mushufeels/consumer:latest
 ```
 
 ## Create .env file in VM
 ```
-touch ~/rmqconsumer.env
-echo "RABBITMQ_HOST={ip_address}" >> ~/rmqconsumer.env
-echo "LOG_LEVEL=warn" >> ~/rmqconsumer.env
+touch ~/consumer.env
+echo "RABBITMQ_HOST={ip_address}" >> ~/consumer.env
+echo "LOG_LEVEL=warn" >> ~/consumer.env
 ```
 
 ## Run container
 ```
-docker run -d --name rmqconsumer --env-file ~/rmqconsumer.env mushufeels/rmqconsumer
+docker run -d --name consumer --env-file ~/consumer.env mushufeels/consumer
 ```
 
 ## Stop containers

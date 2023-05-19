@@ -1,16 +1,17 @@
-package rmq
+package rmqconsumer
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
 
+	"github.com/DennisPing/cs6650-twinder-a2/consumer/store"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/store"
 	"github.com/wagslane/go-rabbitmq"
 )
 
+// Init a new RabbitMQ connection with the RabbitMQ host.
 func NewRmqConn() (*rabbitmq.Conn, error) {
 	host := os.Getenv("RABBITMQ_HOST")
 
@@ -25,6 +26,7 @@ func NewRmqConn() (*rabbitmq.Conn, error) {
 	)
 }
 
+// Start the RabbitMQ consumer. It parses the message and adds a new UserStat into the kv store.
 func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitmq.Consumer, error) {
 	return rabbitmq.NewConsumer(
 		conn,
@@ -38,11 +40,6 @@ func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitm
 				return rabbitmq.NackDiscard
 			}
 
-			if err != nil {
-				logger.Error().Msgf("invalid userId: %v", err)
-				return rabbitmq.NackDiscard
-			}
-
 			kvStore.Add(reqBody.Swiper, reqBody.Swipee, reqBody.Direction)
 			return rabbitmq.Ack
 		},
@@ -51,8 +48,8 @@ func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitm
 		rabbitmq.WithConsumerOptionsRoutingKey(""), // Bind this default queue to default routing key
 		rabbitmq.WithConsumerOptionsExchangeName("swipes"),
 		rabbitmq.WithConsumerOptionsExchangeKind("fanout"),
-		rabbitmq.WithConsumerOptionsQOSPrefetch(100),
-		rabbitmq.WithConsumerOptionsConcurrency(100),
+		rabbitmq.WithConsumerOptionsQOSPrefetch(120),
+		rabbitmq.WithConsumerOptionsConcurrency(4),
 		rabbitmq.WithConsumerOptionsQueueAutoDelete, // Auto delete the queue upon disconnect
 	)
 }

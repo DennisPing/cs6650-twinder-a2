@@ -1,4 +1,4 @@
-package rmq
+package rmqproducer
 
 import (
 	"errors"
@@ -8,6 +8,7 @@ import (
 	"github.com/wagslane/go-rabbitmq"
 )
 
+// Init a new RabbitMQ connection with the RabbitMQ host.
 func NewConnection() (*rabbitmq.Conn, error) {
 	host := os.Getenv("RABBITMQ_HOST")
 
@@ -25,6 +26,7 @@ func NewConnection() (*rabbitmq.Conn, error) {
 	return conn, nil
 }
 
+// Create a new publisher that publishes to the "swipes" exchange via "fanout" method.
 func NewPublisher(conn *rabbitmq.Conn) (*rabbitmq.Publisher, error) {
 	publisher, err := rabbitmq.NewPublisher(
 		conn,

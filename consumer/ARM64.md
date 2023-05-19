@@ -17,7 +17,7 @@ sudo systemctl start docker.service
 ### Build Docker image natively
 ```
 git clone https://github.com/DennisPing/cs6650-twinder-a2.git
-cd rmqconsumer
-docker build -t mushufeels/rmqconsumer .
-docker run -d --name rmqconsumer --env-file ~/config.env mushufeels/rmqconsumer
+cd consumer
+docker build -t mushufeels/consumer .
+docker run -d --name consumer --env-file ~/config.env mushufeels/consumer
 ```

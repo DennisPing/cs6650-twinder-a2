@@ -12,7 +12,7 @@ RUN go mod download
 COPY ./ ./
 
 # Build the binary.
-RUN go build -v -o rmqconsumer ./
+RUN go build -v -o rabbitmq-consumer ./
 
 # Use the official Debian slim image for a lean production container.
 FROM debian:bullseye-slim
@@ -21,7 +21,7 @@ RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -
     rm -rf /var/lib/apt/lists/*
 
 # Copy the binary to the production image from the builder stage.
-COPY --from=builder /app/rmqconsumer /app/rmqconsumer
+COPY --from=builder /app/rabbitmq-consumer /app/rabbitmq-consumer
 
 # Run the consumer service.
-CMD ["/app/rmqconsumer"]
+CMD ["/app/rabbitmq-consumer"]

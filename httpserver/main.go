@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	"github.com/DennisPing/cs6650-twinder-a2/httpserver/metrics"
-	"github.com/DennisPing/cs6650-twinder-a2/httpserver/rmq"
+	"github.com/DennisPing/cs6650-twinder-a2/httpserver/rmqproducer"
 	"github.com/DennisPing/cs6650-twinder-a2/httpserver/server"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 )
@@ -27,19 +27,19 @@ func main() {
 	}
 
 	// Initialize rabbitmq publisher
-	rmqConn, err := rmq.NewConnection()
+	rmqConn, err := rmqproducer.NewConnection()
 	if err != nil {
 		logger.Fatal().Msgf("unable to make rabbitmq connection: %v", err)
 	}
 	defer rmqConn.Close()
-	pub, err := rmq.NewPublisher(rmqConn)
+	publisher, err := rmqproducer.NewPublisher(rmqConn)
 	if err != nil {
 		logger.Fatal().Msgf("unable to make rabbitmq publisher: %v", err)
 	}
-	defer pub.Close()
+	defer publisher.Close()
 
 	// Initialize the http server
-	server := server.NewServer(addr, metrics, pub)
+	server := server.NewServer(addr, metrics, publisher)
 
 	// Run the http server in a goroutine
 	fmt.Printf("Starting server on port %s...\n", port)

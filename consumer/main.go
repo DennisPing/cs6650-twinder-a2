@@ -7,22 +7,22 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/DennisPing/cs6650-twinder-a2/consumer/rmqconsumer"
+	"github.com/DennisPing/cs6650-twinder-a2/consumer/server"
+	"github.com/DennisPing/cs6650-twinder-a2/consumer/store"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/rmq"
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/server"
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/store"
 )
 
 func main() {
 	kvStore := store.NewStore()
 
-	rmqConn, err := rmq.NewRmqConn()
+	rmqConn, err := rmqconsumer.NewRmqConn()
 	if err != nil {
 		logger.Fatal().Err(err).Msg("unable to make rabbitmq connection")
 	}
 	defer rmqConn.Close()
 
-	consumer, err := rmq.StartRmqConsumer(rmqConn, kvStore)
+	consumer, err := rmqconsumer.StartRmqConsumer(rmqConn, kvStore)
 	if err != nil {
 		logger.Fatal().Err(err)
 	}

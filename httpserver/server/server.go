@@ -23,6 +23,7 @@ type Server struct {
 	cancelToken context.CancelFunc
 }
 
+// Create a new server which is composed of an HTTP server and a RabbitMQ publisher
 func NewServer(addr string, metrics *metrics.Metrics, publisher *rabbitmq.Publisher) *Server {
 	chiRouter := chi.NewRouter()
 	s := &Server{
@@ -99,8 +100,8 @@ func (s *Server) swipeHandler(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, r.Method, http.StatusBadRequest, "comment too long")
 	}
 
-	// left and right do the same thing for now
-	// always return a response back to client, don't let them know about rabbitmq
+	// Left and right do the same thing for now
+	// Always return a response back to client since this is asynchronous, don't let them know about RabbitMQ
 	switch leftorright {
 	case "left":
 		writeStatusResponse(w, http.StatusCreated)
@@ -116,11 +117,13 @@ func (s *Server) swipeHandler(w http.ResponseWriter, r *http.Request) {
 	// Append the direction to the request body
 	reqBody.Direction = leftorright
 
+	// Publish the message
 	if err = s.publishToRmq(reqBody); err != nil {
 		logger.Error().Msgf("failed to publish to rabbitmq: %v", err)
 	}
 }
 
+// Publish a message out to the RabbitMQ exchange
 func (s *Server) publishToRmq(payload interface{}) error {
 	logger.Info().Interface("message", payload).Send()
 	respBytes, err := json.Marshal(payload)

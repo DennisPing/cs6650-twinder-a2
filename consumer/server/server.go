@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/DennisPing/cs6650-twinder-a2/consumer/store"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
-	"github.com/DennisPing/cs6650-twinder-a2/rmqconsumer/store"
 	"github.com/go-chi/chi"
 )
 

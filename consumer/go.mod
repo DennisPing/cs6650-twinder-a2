@@ -1,4 +1,4 @@
-module github.com/DennisPing/cs6650-twinder-a2/rmqconsumer
+module github.com/DennisPing/cs6650-twinder-a2/consumer
 
 go 1.19
 

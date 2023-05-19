@@ -12,7 +12,7 @@ var Zlog zerolog.Logger
 
 func init() {
 	zerolog.TimeFieldFormat = time.RFC3339
-	zerolog.SetGlobalLevel(zerolog.InfoLevel) // Set default log level to INFO
+	zerolog.SetGlobalLevel(zerolog.WarnLevel) // Set default log level to WARN
 
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel != "" {
