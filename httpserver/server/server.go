@@ -125,7 +125,7 @@ func (s *Server) swipeHandler(w http.ResponseWriter, r *http.Request) {
 
 // Publish a message out to the RabbitMQ exchange
 func (s *Server) publishToRmq(payload interface{}) error {
-	logger.Info().Interface("message", payload).Send()
+	logger.Debug().Interface("message", payload).Send()
 	respBytes, err := json.Marshal(payload)
 	if err != nil {
 		return err
@@ -140,7 +140,7 @@ func (s *Server) publishToRmq(payload interface{}) error {
 
 // Write a simple HTTP status to the response writer
 func writeStatusResponse(w http.ResponseWriter, statusCode int) {
-	logger.Info().Int("code", statusCode)
+	logger.Debug().Int("code", statusCode)
 	w.WriteHeader(statusCode)
 }
 
@@ -152,7 +152,7 @@ func writeJsonResponse(w http.ResponseWriter, statusCode int, payload interface{
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
-	logger.Info().Interface("send", payload).Send()
+	logger.Debug().Interface("send", payload).Send()
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
 	w.WriteHeader(statusCode)

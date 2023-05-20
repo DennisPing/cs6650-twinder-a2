@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -74,7 +75,7 @@ func Start(kvStore *store.SimpleStore) *http.Server {
 	}
 
 	go func() {
-		logger.Info().Msg("starting HTTP server...")
+		fmt.Printf("starting HTTP server on port %s...\n", server.Addr)
 		if err := server.ListenAndServe(); err != http.ErrServerClosed {
 			logger.Fatal().Err(err).Msg("failed to start HTTP server")
 		}
@@ -85,7 +86,7 @@ func Start(kvStore *store.SimpleStore) *http.Server {
 
 // Write a simple HTTP status to the response writer
 func writeStatusResponse(w http.ResponseWriter, statusCode int) {
-	logger.Info().Int("code", statusCode)
+	logger.Debug().Int("code", statusCode)
 	w.WriteHeader(statusCode)
 }
 
@@ -97,7 +98,7 @@ func writeJsonResponse(w http.ResponseWriter, statusCode int, payload interface{
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
-	logger.Info().Interface("send", payload).Send()
+	logger.Debug().Interface("send", payload).Send()
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
 	w.WriteHeader(statusCode)

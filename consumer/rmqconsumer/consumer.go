@@ -31,7 +31,7 @@ func StartRmqConsumer(conn *rabbitmq.Conn, kvStore *store.SimpleStore) (*rabbitm
 	return rabbitmq.NewConsumer(
 		conn,
 		func(d rabbitmq.Delivery) rabbitmq.Action {
-			logger.Info().Msg(string(d.Body))
+			logger.Debug().Msg(string(d.Body))
 
 			var reqBody models.SwipePayload
 			err := json.Unmarshal(d.Body, &reqBody)

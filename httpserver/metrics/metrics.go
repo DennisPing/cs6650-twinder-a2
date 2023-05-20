@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 )
 
@@ -55,6 +56,7 @@ func (m *Metrics) GetThroughput() uint64 {
 // Send the metrics over to Axiom
 func (m *Metrics) SendMetrics() error {
 	throughput := m.GetThroughput()
+	logger.Info().Uint64("throughput", throughput)
 	payload := models.AxiomPayload{
 		Time:       time.Now().Format(time.RFC3339Nano),
 		Throughput: throughput,

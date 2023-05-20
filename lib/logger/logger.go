@@ -8,11 +8,11 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var Zlog zerolog.Logger
+var zlog zerolog.Logger
 
 func init() {
 	zerolog.TimeFieldFormat = time.RFC3339
-	zerolog.SetGlobalLevel(zerolog.WarnLevel) // Set default log level to WARN
+	zerolog.SetGlobalLevel(zerolog.InfoLevel) // Set default log level to INFO
 
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel != "" {
@@ -23,27 +23,27 @@ func init() {
 	}
 
 	fmt.Printf("Current log level: %s\n", zerolog.GlobalLevel().String())
-	Zlog = zerolog.New(os.Stdout).With().Timestamp().Logger()
+	zlog = zerolog.New(os.Stdout).With().Timestamp().Logger()
 }
 
 func Info() *zerolog.Event {
-	return Zlog.Info()
+	return zlog.Info()
 }
 
 func Error() *zerolog.Event {
-	return Zlog.Error()
+	return zlog.Error()
 }
 
 func Warn() *zerolog.Event {
-	return Zlog.Warn()
+	return zlog.Warn()
 }
 
 func Debug() *zerolog.Event {
-	return Zlog.Debug()
+	return zlog.Debug()
 }
 
 func Fatal() *zerolog.Event {
-	return Zlog.Fatal()
+	return zlog.Fatal()
 }
 
 // StdLogger is a custom logger that implements the logger.Logger interface
