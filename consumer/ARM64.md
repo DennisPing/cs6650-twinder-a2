@@ -7,9 +7,9 @@ You cannot build a Docker image on an amd64 computer and use it on arm64 instanc
 ### Setup dependencies
 ```bash
 sudo yum update -y
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker ec2-user
+sudo yum install -y docker
+sudo usermod -a -G docker ec2-user
+newgrp docker
 # Log out and log back in here to ensure this takes effect
 sudo systemctl enable docker
 sudo systemctl start docker

@@ -10,11 +10,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 )
 
 type Metrics struct {
+	serverId    string
 	datasetName string
 	apiToken    string
 	ingestUrl   string
@@ -23,6 +23,7 @@ type Metrics struct {
 }
 
 func NewMetrics() (*Metrics, error) {
+	serverId := os.Getenv("RAILWAY_REPLICA_ID")
 	datasetName := os.Getenv("AXIOM_DATASET")
 	apiToken := os.Getenv("AXIOM_API_TOKEN")
 	ingestUrl := "https://api.axiom.co/v1/datasets/%s/ingest"
@@ -31,6 +32,7 @@ func NewMetrics() (*Metrics, error) {
 		return nil, errors.New("you forgot to set the AXIOM env variables")
 	}
 	return &Metrics{
+		serverId:    serverId,
 		datasetName: datasetName,
 		apiToken:    apiToken,
 		ingestUrl:   ingestUrl,
@@ -56,9 +58,9 @@ func (m *Metrics) GetThroughput() uint64 {
 // Send the metrics over to Axiom
 func (m *Metrics) SendMetrics() error {
 	throughput := m.GetThroughput()
-	logger.Info().Uint64("throughput", throughput)
 	payload := models.AxiomPayload{
 		Time:       time.Now().Format(time.RFC3339Nano),
+		ServerId:   m.serverId,
 		Throughput: throughput,
 	}
 
