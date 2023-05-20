@@ -3,8 +3,7 @@
 ## Key Takeaways
 
 - Self managing VM instances is painful
-- Railway's auto-vertical scaling is much easier than manually scaling a VM
-- Managed PaaS (Railway, Heroku, Digital Ocean) give you free SSL which lets you utilize HTTP/2
+- Vertical scaling is much easier than horizontal scaling
 
 ## How to Build and Deploy (2 options)
 
