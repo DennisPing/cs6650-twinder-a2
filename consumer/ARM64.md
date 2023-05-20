@@ -20,5 +20,5 @@ sudo systemctl start docker
 git clone https://github.com/DennisPing/cs6650-twinder-a2.git
 cd consumer
 docker build -t mushufeels/consumer .
-docker run -d --name consumer --env-file ~/consumer.env mushufeels/consumer
+docker run -d --name consumer --env-file ~/consumer.env -p 8080:8080 mushufeels/consumer
 ```
