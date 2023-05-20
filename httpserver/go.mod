@@ -3,7 +3,7 @@ module github.com/DennisPing/cs6650-twinder-a2/httpserver
 go 1.19
 
 require (
-	github.com/DennisPing/cs6650-twinder-a2/lib v0.0.0-20230511212016-9e7383d13b82
+	github.com/DennisPing/cs6650-twinder-a2/lib v0.0.0-20230520175048-6f2243936e3d
 	github.com/go-chi/chi v1.5.4
 	github.com/wagslane/go-rabbitmq v0.12.3
 )

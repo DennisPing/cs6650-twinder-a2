@@ -1,5 +1,7 @@
 github.com/DennisPing/cs6650-twinder-a2/lib v0.0.0-20230511212016-9e7383d13b82 h1:24rtdQoSvjneyB5F1SVTH5svz4mt1LHgmKQ2zgqWR38=
 github.com/DennisPing/cs6650-twinder-a2/lib v0.0.0-20230511212016-9e7383d13b82/go.mod h1:gVkqY7E9Lw2CE1esdZKkWyVXWb98cnkb1rl+gnvHztA=
+github.com/DennisPing/cs6650-twinder-a2/lib v0.0.0-20230520175048-6f2243936e3d h1:/2MgaReY/qmWhabp6+taCe9Pl9ZVO69yiZH+OlPODJ0=
+github.com/DennisPing/cs6650-twinder-a2/lib v0.0.0-20230520175048-6f2243936e3d/go.mod h1:gVkqY7E9Lw2CE1esdZKkWyVXWb98cnkb1rl+gnvHztA=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
