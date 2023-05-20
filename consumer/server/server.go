@@ -50,7 +50,7 @@ func Start(kvStore *store.SimpleStore) *http.Server {
 		writeJsonResponse(w, http.StatusOK, twinderMatches)
 	})
 
-	// GET /matches/all
+	// GET /swipes/all
 	chiRouter.Get("/swipes/all", func(w http.ResponseWriter, r *http.Request) {
 		allStats := kvStore.GetAllUserStats()
 		twinderUsersStats := &models.AllTwinderUserStats{

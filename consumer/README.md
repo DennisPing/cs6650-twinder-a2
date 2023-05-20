@@ -20,7 +20,7 @@ echo "LOG_LEVEL=warn" >> ~/consumer.env
 
 ## Run container
 ```
-docker run -d --name consumer --env-file ~/consumer.env mushufeels/consumer
+docker run -d --name consumer --env-file ~/consumer.env -p 8080:8080 mushufeels/consumer
 ```
 
 ## Stop containers
