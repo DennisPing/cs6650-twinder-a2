@@ -13,7 +13,14 @@ import (
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 )
 
-type Metrics struct {
+//go:generate mockery --name=Metrics
+type Metrics interface {
+	IncrementThroughput()
+	GetThroughput() uint64
+	SendMetrics() error
+}
+
+type AxiomMetrics struct {
 	serverId    string
 	datasetName string
 	apiToken    string
@@ -22,7 +29,7 @@ type Metrics struct {
 	mutex       sync.Mutex
 }
 
-func NewMetrics() (*Metrics, error) {
+func NewMetrics() (*AxiomMetrics, error) {
 	serverId := os.Getenv("RAILWAY_REPLICA_ID")
 	datasetName := os.Getenv("AXIOM_DATASET")
 	apiToken := os.Getenv("AXIOM_API_TOKEN")
@@ -31,7 +38,7 @@ func NewMetrics() (*Metrics, error) {
 	if datasetName == "" || apiToken == "" {
 		return nil, errors.New("you forgot to set the AXIOM env variables")
 	}
-	return &Metrics{
+	return &AxiomMetrics{
 		serverId:    serverId,
 		datasetName: datasetName,
 		apiToken:    apiToken,
@@ -40,14 +47,14 @@ func NewMetrics() (*Metrics, error) {
 }
 
 // Increment the throughput count
-func (m *Metrics) IncrementThroughput() {
+func (m *AxiomMetrics) IncrementThroughput() {
 	m.mutex.Lock()
 	m.throughput++
 	m.mutex.Unlock()
 }
 
 // Return the throughput and reset the count
-func (m *Metrics) GetThroughput() uint64 {
+func (m *AxiomMetrics) GetThroughput() uint64 {
 	m.mutex.Lock()
 	throughput := m.throughput
 	m.throughput = 0
@@ -56,7 +63,7 @@ func (m *Metrics) GetThroughput() uint64 {
 }
 
 // Send the metrics over to Axiom
-func (m *Metrics) SendMetrics() error {
+func (m *AxiomMetrics) SendMetrics() error {
 	throughput := m.GetThroughput()
 	payload := models.AxiomPayload{
 		Time:       time.Now().Format(time.RFC3339Nano),

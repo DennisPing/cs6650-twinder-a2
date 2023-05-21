@@ -8,6 +8,12 @@ import (
 	"github.com/wagslane/go-rabbitmq"
 )
 
+//go:generate mockery --name=Publisher
+type Publisher interface {
+	Publish(data []byte, routingKeys []string, optionFuncs ...func(*rabbitmq.PublishOptions)) error
+	Close()
+}
+
 // Init a new RabbitMQ connection with the RabbitMQ host.
 func NewConnection() (*rabbitmq.Conn, error) {
 	host := os.Getenv("RABBITMQ_HOST")
