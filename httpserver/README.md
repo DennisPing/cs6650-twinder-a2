@@ -16,3 +16,9 @@ Make sure to add the environment variables either in a .env file or into your Pa
 2. AXIOM_DATASET (dataset name)
 3. LOG_LEVEL (debug, info, warn, etc)
 4. RABBITMQ_HOST (ip address)
+
+## Generate Mocks
+
+```bash
+go generate ./...
+```

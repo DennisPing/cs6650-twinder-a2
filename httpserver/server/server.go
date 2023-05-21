@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/DennisPing/cs6650-twinder-a2/httpserver/metrics"
+	"github.com/DennisPing/cs6650-twinder-a2/httpserver/rmqproducer"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/logger"
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 	"github.com/go-chi/chi"
@@ -17,22 +18,22 @@ import (
 
 type Server struct {
 	http.Server
-	*metrics.Metrics
-	Pub         *rabbitmq.Publisher
+	metrics.Metrics
+	rmqproducer.Publisher
 	ticker      *time.Ticker
 	cancelToken context.CancelFunc
 }
 
 // Create a new server which is composed of an HTTP server and a RabbitMQ publisher
-func NewServer(addr string, metrics *metrics.Metrics, publisher *rabbitmq.Publisher) *Server {
+func NewServer(addr string, metrics metrics.Metrics, publisher rmqproducer.Publisher) *Server {
 	chiRouter := chi.NewRouter()
 	s := &Server{
 		Server: http.Server{
 			Addr:    addr,
 			Handler: chiRouter,
 		},
-		Metrics: metrics,
-		Pub:     publisher,
+		Metrics:   metrics,
+		Publisher: publisher,
 	}
 	chiRouter.Get("/health", s.homeHandler)
 	chiRouter.Post("/swipe/{leftorright}/", s.swipeHandler)
@@ -98,6 +99,7 @@ func (s *Server) swipeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if len(reqBody.Comment) > 256 {
 		writeErrorResponse(w, r.Method, http.StatusBadRequest, "comment too long")
+		return
 	}
 
 	// Left and right do the same thing for now
@@ -130,7 +132,7 @@ func (s *Server) publishToRmq(payload interface{}) error {
 	if err != nil {
 		return err
 	}
-	return s.Pub.Publish(
+	return s.Publish(
 		[]byte(respBytes),
 		[]string{""},
 		rabbitmq.WithPublishOptionsContentType("application/json"),
