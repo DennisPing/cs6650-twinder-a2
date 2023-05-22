@@ -5,7 +5,7 @@ Single client using 50 goroutines and sending 500k total POST requests
 ## Build
 
 ```bash
-docker built -t mushufeels/httpclient .
+docker build -t mushufeels/httpclient .
 ```
 
 ## Environment Variables
