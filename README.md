@@ -34,8 +34,6 @@ Since there are 2 HTTP Servers, the throughput data needs to be added up. "Orang
 
 ![load-balanced-1](results/rabbitmq-1consumer-mid.png)
 
----
-
 ![load-balanced-2](results/rabbitmq-1consumer-done.png)
 
 The publisher and consumer rates are nearly equal which is a great sign. There are very few messages stored in the queue at any given moment. The performance is excellent since it matches the client's load production rate of roughly 5500 req/sec.
@@ -43,8 +41,6 @@ The publisher and consumer rates are nearly equal which is a great sign. There a
 ### RabbitMQ metrics with 2 HTTP servers and 2 Consumers
 
 ![2consumers-1](results/rabbitmq-2consumers-mid.png)
-
----
 
 ![2consumers-2](results/rabbitmq-2consumers-done.png)
 
