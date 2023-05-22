@@ -71,8 +71,6 @@ func TestHandlers(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			bodyBytes, _ := json.Marshal(tc.body)
 			bodyReader := bytes.NewReader(bodyBytes)
-
-			// Create a new HTTP request
 			req, _ := http.NewRequest(tc.method, tc.url, bodyReader)
 
 			// Create a ResponseRecorder to record the response
@@ -81,7 +79,9 @@ func TestHandlers(t *testing.T) {
 			// Serve the request
 			s.Handler.ServeHTTP(rr, req)
 
-			assert.Equal(t, tc.expectedStatus, rr.Code)
+			resp := rr.Result()
+
+			assert.Equal(t, tc.expectedStatus, resp.StatusCode)
 		})
 	}
 }
@@ -153,8 +153,6 @@ func TestHandlersError(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			bodyBytes, _ := json.Marshal(tc.body)
 			bodyReader := bytes.NewReader(bodyBytes)
-
-			// Create a new HTTP request
 			req, _ := http.NewRequest(tc.method, tc.url, bodyReader)
 
 			// Create a ResponseRecorder to record the response
@@ -163,10 +161,12 @@ func TestHandlersError(t *testing.T) {
 			// Serve the request
 			s.Handler.ServeHTTP(rr, req)
 
-			respBody, _ := io.ReadAll(rr.Body)
+			resp := rr.Result()
+
+			respBody, _ := io.ReadAll(resp.Body)
 			message := string(respBody)
 
-			assert.Equal(t, tc.expectedStatus, rr.Code)
+			assert.Equal(t, tc.expectedStatus, resp.StatusCode)
 			assert.Equal(t, tc.expectedMessage, message)
 		})
 	}
