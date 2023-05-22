@@ -13,7 +13,7 @@ import (
 	"github.com/DennisPing/cs6650-twinder-a2/lib/models"
 )
 
-//go:generate mockery --name=Metrics
+//go:generate mockery --name=Metrics --filename=mock_metrics.go
 type Metrics interface {
 	IncrementThroughput()
 	GetThroughput() uint64
@@ -21,12 +21,12 @@ type Metrics interface {
 }
 
 type AxiomMetrics struct {
-	serverId    string
-	datasetName string
-	apiToken    string
-	ingestUrl   string
-	throughput  uint64
-	mutex       sync.Mutex
+	ServerId    string
+	DatasetName string
+	ApiToken    string
+	IngestUrl   string
+	Throughput  uint64
+	Mutex       sync.Mutex
 }
 
 func NewMetrics() (*AxiomMetrics, error) {
@@ -39,26 +39,26 @@ func NewMetrics() (*AxiomMetrics, error) {
 		return nil, errors.New("you forgot to set the AXIOM env variables")
 	}
 	return &AxiomMetrics{
-		serverId:    serverId,
-		datasetName: datasetName,
-		apiToken:    apiToken,
-		ingestUrl:   ingestUrl,
+		ServerId:    serverId,
+		DatasetName: datasetName,
+		ApiToken:    apiToken,
+		IngestUrl:   ingestUrl,
 	}, nil
 }
 
 // Increment the throughput count
 func (m *AxiomMetrics) IncrementThroughput() {
-	m.mutex.Lock()
-	m.throughput++
-	m.mutex.Unlock()
+	m.Mutex.Lock()
+	m.Throughput++
+	m.Mutex.Unlock()
 }
 
 // Return the throughput and reset the count
 func (m *AxiomMetrics) GetThroughput() uint64 {
-	m.mutex.Lock()
-	throughput := m.throughput
-	m.throughput = 0
-	m.mutex.Unlock()
+	m.Mutex.Lock()
+	throughput := m.Throughput
+	m.Throughput = 0
+	m.Mutex.Unlock()
 	return throughput
 }
 
@@ -67,7 +67,7 @@ func (m *AxiomMetrics) SendMetrics() error {
 	throughput := m.GetThroughput()
 	payload := models.AxiomPayload{
 		Time:       time.Now().Format(time.RFC3339Nano),
-		ServerId:   m.serverId,
+		ServerId:   m.ServerId,
 		Throughput: throughput,
 	}
 
@@ -76,13 +76,13 @@ func (m *AxiomMetrics) SendMetrics() error {
 		return err
 	}
 
-	url := fmt.Sprintf(m.ingestUrl, m.datasetName)
+	url := fmt.Sprintf(m.IngestUrl, m.DatasetName)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload))
 	if err != nil {
 		return err
 	}
 
-	req.Header.Set("Authorization", "Bearer "+m.apiToken)
+	req.Header.Set("Authorization", "Bearer "+m.ApiToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}

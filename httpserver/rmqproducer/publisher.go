@@ -8,10 +8,9 @@ import (
 	"github.com/wagslane/go-rabbitmq"
 )
 
-//go:generate mockery --name=Publisher
+//go:generate mockery --name=Publisher --filename=mock_publisher.go
 type Publisher interface {
 	Publish(data []byte, routingKeys []string, optionFuncs ...func(*rabbitmq.PublishOptions)) error
-	Close()
 }
 
 // Init a new RabbitMQ connection with the RabbitMQ host.

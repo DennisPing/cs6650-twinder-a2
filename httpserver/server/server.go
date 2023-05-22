@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -97,6 +98,14 @@ func (s *Server) swipeHandler(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, r.Method, http.StatusBadRequest, "bad request")
 		return
 	}
+	if _, err := strconv.Atoi(reqBody.Swiper); err != nil {
+		writeErrorResponse(w, r.Method, http.StatusBadRequest, fmt.Sprintf("invalid swiper: %s", reqBody.Swiper))
+		return
+	}
+	if _, err := strconv.Atoi(reqBody.Swipee); err != nil {
+		writeErrorResponse(w, r.Method, http.StatusBadRequest, fmt.Sprintf("invalid swipee: %s", reqBody.Swipee))
+		return
+	}
 	if len(reqBody.Comment) > 256 {
 		writeErrorResponse(w, r.Method, http.StatusBadRequest, "comment too long")
 		return
@@ -120,13 +129,13 @@ func (s *Server) swipeHandler(w http.ResponseWriter, r *http.Request) {
 	reqBody.Direction = leftorright
 
 	// Publish the message
-	if err = s.publishToRmq(reqBody); err != nil {
+	if err = s.PublishToRmq(reqBody); err != nil {
 		logger.Error().Msgf("failed to publish to rabbitmq: %v", err)
 	}
 }
 
 // Publish a message out to the RabbitMQ exchange
-func (s *Server) publishToRmq(payload interface{}) error {
+func (s *Server) PublishToRmq(payload interface{}) error {
 	logger.Debug().Interface("message", payload).Send()
 	respBytes, err := json.Marshal(payload)
 	if err != nil {
