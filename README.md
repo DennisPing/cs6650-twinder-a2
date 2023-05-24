@@ -9,10 +9,12 @@
 
 ![architecture](results/twinder-a2-architecture.png)
 
-The HTTP server parses requests from the client and sends off messages to RabbitMQ in a "fire and forget" method. Hence, the phrase "asynchronous message queue". The consumer receives messages from RabbitMQ, processes it, and returns an ACK. In the error case where the message cannot be processed, the consumer returns a NACK instead.
+The HTTP server receives requests from the client and sends off messages to RabbitMQ in a "fire and forget" fashion. Hence, the phrase "asynchronous message queue". The consumer receives messages from RabbitMQ, processes it, and returns an ACK. In the error case where the message cannot be processed, the consumer returns a NACK instead.
 
-**Each Consumer has the following configuration:**
+**Railway region:** us-west-2  
+**AWS region:** us-east-2
 
+**Each Consumer has the following configuration:**  
 Number of goroutines = 4  
 QoS Prefetch = 128
 
@@ -28,7 +30,7 @@ The performance is very similar to Assignment 1 even though the HTTP server is h
 
 ![axiom-throughput](results/axiom-throughput.png)
 
-Since there are 2 HTTP Servers, the throughput data needs to be added up. "Orange" is server 1 and "Blue" is server 2. The metrics are gathered every 5 seconds. The total throughput is roughly 5500 req/sec during peak load.
+Since there are 2 HTTP Servers, the throughput data needs to be added up. "Orange" is server 1 and "Blue" is server 2. The metrics accumulated and sent every 5 seconds. The total throughput is roughly 5500 req/sec during peak load.
 
 ### RabbitMQ metrics with 2 HTTP Servers and 1 Consumer
 
@@ -36,7 +38,7 @@ Since there are 2 HTTP Servers, the throughput data needs to be added up. "Orang
 
 ![load-balanced-2](results/rabbitmq-1consumer-done.png)
 
-The publisher and consumer rates are nearly equal which is a great sign. There are very few messages stored in the queue at any given moment. The performance is excellent since it matches the client's load production rate of roughly 5500 req/sec.
+The publisher and consumer rates are nearly equal which is a great sign. There are very few messages stored in the queue at any given moment. The performance is excellent since it matches the client's load production rate of over 5500 req/sec.
 
 ### RabbitMQ metrics with 2 HTTP servers and 2 Consumers
 
@@ -44,7 +46,7 @@ The publisher and consumer rates are nearly equal which is a great sign. There a
 
 ![2consumers-2](results/rabbitmq-2consumers-done.png)
 
-The consume rate is 2x the publish rate because there are now 2 consumers and the exchange method is "fanout". There is one spike of 225 queued messages, but it is quickly handled by the consumers. Overall, the performance is excellent since it matches the client's load production rate of roughly 5500 req/sec.
+The consume rate is 2x the publish rate because there are now 2 consumers and the exchange method is "fanout". There is one spike of 225 queued messages, but it is quickly handled by the consumers. Overall, the performance is excellent since it matches the client's load production rate of over 5500 req/sec.
 
 ### Consumer Data Storage
 
@@ -83,8 +85,6 @@ http://123.456.78.90:8080/matches?userId=1234
 }
 ```
 
-Since we don't have a database viewer like Firebase or Prisma, you can retrieve all data in the hashmap on the endpoint:
+Since we don't have a database viewer like on AWS, Firebase, etc, you can retrieve all data in the hashmap on the endpoint:
 
-```
-GET /swipes/all
-```
+#### GET /swipes/all
